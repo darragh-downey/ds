@@ -1,9 +1,16 @@
 package main
 
-import "github.com/robatussum/ds/go/ds"
+import (
+	"fmt"
+	"runtime"
+	"sync"
+	"time"
+
+	"github.com/robatussum/go_ds"
+)
 
 func main() {
-	b, root := &ds.BST{}, &ds.BST{}
+	b, root := &go_ds.BST{}, &go_ds.BST{}
 
 	root = b.Insert(root, 50)
 	b.Insert(root, 30)
@@ -14,4 +21,13 @@ func main() {
 	b.Insert(root, 80)
 
 	b.Inorder(root)
+	processors := runtime.GOMAXPROCS(runtime.NumCPU())
+	fmt.Printf("\nTime elapsed: %v\n\n", time.Since(time.Now()))
+
+	wg := sync.WaitGroup{}
+	wg.Add(1)
+	go b.DFSParallel(&wg)
+	wg.Wait()
+
+	fmt.Printf("\nProcessors: %d\n\n", processors)
 }

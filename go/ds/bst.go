@@ -1,6 +1,9 @@
 package ds
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
 type BST struct {
 	Value int
@@ -9,19 +12,20 @@ type BST struct {
 	Right *BST
 }
 
-func (b *BST) Search(root *BST, key int) *BST {
+// Search recursive search
+func (b *BST) Search(key int) *BST {
 	if b == nil || b.Value == key {
 		return b
 	}
 
 	if b.Value < key {
-		return b.Search(b.Right, key)
+		return b.Right.Search(key)
 	}
 
-	return b.Search(b.Left, key)
+	return b.Left.Search(key)
 }
 
-func (b *BST) Insert(root *BST, value int) *BST {
+func (b *BST) Insert(value int) *BST {
 	if b == nil {
 		b.Value = value
 		return &BST{
@@ -30,20 +34,73 @@ func (b *BST) Insert(root *BST, value int) *BST {
 	}
 
 	if value > b.Value {
-		b.Right = b.Insert(b.Right, value)
+		b.Right = b.Right.Insert(value)
 	} else {
-		b.Left = b.Insert(b.Left, value)
+		b.Left = b.Left.Insert(value)
 	}
 
-	return root
+	return b
 }
 
-func (b *BST) Inorder(root *BST) {
+// Inorder traversal
+func (b *BST) Inorder() {
 	if b == nil {
 		return
 	}
 
-	b.Inorder(root.Left)
+	b.Left.Inorder()
 	fmt.Printf("%v", b.Value)
-	b.Inorder(root.Right)
+	b.Right.Inorder()
+}
+
+func (b *BST) Preorder() {
+	if b == nil {
+		return
+	}
+
+	fmt.Printf("%v", b.Value)
+	b.Left.Preorder()
+	b.Right.Preorder()
+}
+
+func (b *BST) Postorder() {
+	if b == nil {
+		return
+	}
+
+	b.Left.Postorder()
+	b.Right.Postorder()
+	fmt.Printf("%v", b.Value)
+}
+
+func (b *BST) DFS() {
+	if b == nil {
+		return
+	}
+
+	b.Left.DFS()
+	fmt.Printf("%v", b.Value)
+	b.Right.DFS()
+}
+
+func (b *BST) ProcessNodeParallel(wg *sync.WaitGroup) {
+	defer wg.Done()
+	fmt.Printf("%v", b.Value)
+}
+
+func (b *BST) DFSParallel(wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	if b == nil {
+		return
+	}
+
+	wg.Add(1)
+	go b.Left.DFSParallel(wg)
+
+	wg.Add(1)
+	go b.ProcessNodeParallel(wg)
+
+	wg.Add(1)
+	go b.Right.DFSParallel(wg)
 }
