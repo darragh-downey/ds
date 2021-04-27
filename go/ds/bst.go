@@ -43,6 +43,7 @@ func (b *BST) Insert(value int) *BST {
 }
 
 // Inorder traversal
+// left, root, right
 func (b *BST) Inorder() {
 	if b == nil {
 		return
@@ -53,6 +54,8 @@ func (b *BST) Inorder() {
 	b.Right.Inorder()
 }
 
+// Preorder traversal
+// root, left, right
 func (b *BST) Preorder() {
 	if b == nil {
 		return
@@ -63,6 +66,8 @@ func (b *BST) Preorder() {
 	b.Right.Preorder()
 }
 
+// Postorder traversal
+// left, right, root
 func (b *BST) Postorder() {
 	if b == nil {
 		return
