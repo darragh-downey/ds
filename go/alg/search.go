@@ -3,13 +3,39 @@ package alg
 import "math"
 
 // Sequential search
-// Runs in O(n)
+// Time complexity: O(n)
+// Space complexity: O(1)
 func Sequential(arr []int, key int) int {
 	for k, i := range arr {
 		if i == key {
 			return k
 		}
 	}
+	return -1
+}
+
+// SequentialImproved search
+// Time complexity: O(n)
+// Worst case time complexity:
+//       1. if element found at last index - O(n) to O(1)
+//       2. if element not found - O(n) to O(n/2)
+func SequentialImproved(arr []int, key int) int {
+	left, right := 0, len(arr)-1
+	// run loop from 0 to right
+	for left <= right {
+		// if key is found with left pointer
+		if arr[left] == key {
+			return left
+		}
+		// if key is found with right pointer
+		if arr[right] == key {
+			return right
+		}
+		left++
+		right--
+	}
+
+	// key not found
 	return -1
 }
 
