@@ -1,5 +1,7 @@
 package alg
 
+import "math"
+
 // Selection sort
 // Time complexity: O(n^2) as there are two nested loops over the (same) array
 // Space complexity: O(1) it never makes more than O(n) swaps and can be useful when memory writes are expensive
@@ -98,7 +100,7 @@ func Insertion(arr []int) {
 	}
 }
 
-func merge(arr []int, l, mid, r int) {
+func tdmerge(arr []int, l, mid, r int) {
 	n1 := mid - l + 1
 	n2 := r - mid
 	// create temporary arrays
@@ -138,12 +140,48 @@ func TopDownMerge(arr []int, l, r int) {
 		return
 	}
 	mid := l + (r-l)/2
-	TopDownMerge(arr, l, m)
-	TopDownMerge(arr, m+1, r)
-	merge(arr, l, m, r)
+	TopDownMerge(arr, l, mid)
+	TopDownMerge(arr, mid+1, r)
+	tdmerge(arr, l, mid, r)
 }
 
-func BottomUpMerge(arr []int) {}
+// https://algs4.cs.princeton.edu/22mergesort/MergeBU.java.html
+// stably merge arr[lo..mid] with arr[mid+1..hi] using temp[lo..hi]
+func bumerge(arr, temp []int, lo, mid, hi int) {
+	for k := lo; k <= hi; k++ {
+		temp[k] = arr[k]
+	}
+	i, j := lo, mid+1
+
+	for k := lo; k <= hi; k++ {
+		if i > mid {
+			arr[k] = temp[j]
+			j++
+		} else if j > hi {
+			arr[k] = temp[i]
+			i++
+		} else if temp[j] < temp[i] {
+			arr[k] = temp[j]
+			j++
+		} else {
+			arr[k] = temp[i]
+			i++
+		}
+	}
+}
+
+func BottomUpMerge(arr []int) {
+	n := len(arr)
+	temp := make([]int, n)
+
+	for length := 1; length < n; length *= 2 {
+		for lo := 0; lo < n-length; lo += length + length {
+			mid := lo + length - 1
+			hi := int(math.Min(float64(lo+length+length-1), float64(n-1)))
+			bumerge(arr, temp, lo, mid, hi)
+		}
+	}
+}
 
 // to heapify a subtree rooted with node i which is
 // an index in arr []int. n is size of heap
