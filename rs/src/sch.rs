@@ -74,6 +74,26 @@ mod alg {
         let r: u32 = u32::try_from(m).unwrap();
         return recursive_binary_search(arr, l, r, key);
     }
+
+    // need a [custom] trait for ints/floats only
+    pub fn interpolation_search<T: Ord>(arr: &mut [T], lo: usize, hi: usize, key: T) -> Option<usize> {
+        if lo <= hi && key >= arr[lo] && key <= arr[hi] {
+            let pos = lo + (hi - lo)/(arr[hi] - arr[lo])*(key - arr[lo]);
+
+            if arr[pos] == key {
+                return Some(pos);
+            }
+    
+            if arr[pos] < key {
+                return interpolation_search(arr, pos+1, hi, key);
+            }
+    
+            if arr[pos] > key {
+                return interpolation_search(arr, lo, pos-1, key);
+            }
+        }
+        None
+    }
 }
 
 #[cfg(test)]
