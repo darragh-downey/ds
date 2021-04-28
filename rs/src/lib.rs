@@ -1,2 +1,2 @@
-pub mod ds;
-pub mod alg;
+pub mod bst;
+pub mod srt;
