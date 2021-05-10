@@ -1,9 +1,9 @@
-package test
+package alg_test
 
 import (
 	"testing"
 
-	"github.com/darragh-downey/ds/go"
+	"github.com/darragh-downey/ds/go/alg"
 )
 
 func TestBUMergesort(t *testing.T) {
@@ -19,7 +19,7 @@ func TestBUMergesort(t *testing.T) {
 		alg.BottomUpMerge(c.i)
 
 		if !isSorted(c.i) {
-			t.Error("E: Not sorted %v", c.i)
+			t.Errorf("E: Not sorted %v", c.i)
 		}
 	}
 }

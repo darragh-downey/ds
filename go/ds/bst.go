@@ -2,7 +2,6 @@ package ds
 
 import (
 	"fmt"
-	"sync"
 )
 
 type BST struct {
@@ -76,36 +75,4 @@ func (b *BST) Postorder() {
 	b.Left.Postorder()
 	b.Right.Postorder()
 	fmt.Printf("%v", b.Value)
-}
-
-func (b *BST) DFS() {
-	if b == nil {
-		return
-	}
-
-	b.Left.DFS()
-	fmt.Printf("%v", b.Value)
-	b.Right.DFS()
-}
-
-func (b *BST) ProcessNodeParallel(wg *sync.WaitGroup) {
-	defer wg.Done()
-	fmt.Printf("%v", b.Value)
-}
-
-func (b *BST) DFSParallel(wg *sync.WaitGroup) {
-	defer wg.Done()
-
-	if b == nil {
-		return
-	}
-
-	wg.Add(1)
-	go b.Left.DFSParallel(wg)
-
-	wg.Add(1)
-	go b.ProcessNodeParallel(wg)
-
-	wg.Add(1)
-	go b.Right.DFSParallel(wg)
 }
