@@ -6,7 +6,8 @@ import (
 )
 
 type Node struct {
-	Value int64
+	Value   int64
+	Visited bool
 }
 
 func (n *Node) String() string {

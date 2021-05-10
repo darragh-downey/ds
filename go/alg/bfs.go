@@ -1,8 +1,10 @@
 package alg
 
+import "github.com/darragh-downey/ds/go/ds"
+
 // BFS Breadth First Search
-func BFS(g *Graph, idx int, f func(*Node)) (connections int64) {
-	q := NodeQueue{}
+func BFS(g *ds.Graph, idx int, f func(*ds.Node)) (connections int64) {
+	q := ds.NodeQueue{}
 	q.New()
 
 	n := g.Nodes[idx]

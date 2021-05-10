@@ -1,17 +1,21 @@
 package alg
 
-import "sync"
+import (
+	"sync"
+
+	"github.com/darragh-downey/ds/go/ds"
+)
 
 // DFS Depth First Search
-func (g *ds.Graph) DFS(root *ds.Node, visit func(*Node)) {
+func DFS(g *ds.Graph, root *ds.Node, visited map[int64]bool, visit func(*ds.Node)) {
 	if root == nil {
 		return
 	}
 	visit(root)
-	root.visited = true
-	for _, node := range g.Edges[node] {
-		if visited[node] == false {
-			g.DFS(*node)
+	root.Visited = true
+	for _, node := range g.Edges[root.Value] {
+		if !visited[node.Value] {
+			DFS(g, node, visited, visit)
 		}
 	}
 }

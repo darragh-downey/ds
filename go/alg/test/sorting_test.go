@@ -3,7 +3,7 @@ package test
 import (
 	"testing"
 
-	"github.com/robatussum/go_ds/alg"
+	"github.com/darragh-downey/ds/go"
 )
 
 func TestBUMergesort(t *testing.T) {
