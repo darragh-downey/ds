@@ -13,9 +13,42 @@ func (n *Node) String() string {
 	return fmt.Sprintf("%v", n.Value)
 }
 
-type Graph struct {
+type Edge struct {
+	Key    int
+	Weight int64
+	From   *Node
+	To     *Node
+}
+
+func (e *Edge) String() string {
+	return fmt.Sprintf("%v - %d -> %v", e.From, e.Weight, e.To)
+}
+
+type WeightedGraph struct {
 	Nodes []*Node
-	Edges map[int64][]*Node
+	Edges map[int][]*Edge // for the Node with id, list all of its Edges
+}
+
+type Graph struct {
+	Nodes    []*Node
+	Edges    map[int64][]*Node
+	directed bool
+}
+
+func NewUndirectedGraph() *Graph {
+	return &Graph{
+		Nodes:    []*Node{},
+		Edges:    make(map[int64][]*Node),
+		directed: false,
+	}
+}
+
+func NewDirectedGraph() *Graph {
+	return &Graph{
+		Nodes:    []*Node{},
+		Edges:    make(map[int64][]*Node),
+		directed: true,
+	}
 }
 
 func (g *Graph) AddNode(n *Node) {
@@ -102,50 +135,4 @@ func (pq *NodeQueue) Size() int {
 	pq.lock.Lock()
 	defer pq.lock.Unlock()
 	return len(pq.items)
-}
-
-// BFS Breadth First Search
-func (g *Graph) BFS(idx int, f func(*Node)) (connections int64) {
-	q := NodeQueue{}
-	q.New()
-
-	n := g.Nodes[idx]
-	q.Enqueue(*n)
-	visited := make(map[int32]bool)
-
-	for {
-		if q.IsEmpty() {
-			break
-		}
-
-		node := q.Dequeue()
-		visited[int32(node.Value)] = true
-		near := g.Edges[node.Value]
-
-		for i := 0; i < len(near); i++ {
-			j := near[i]
-			if !visited[int32(j.Value)] {
-				q.Enqueue(*j)
-				visited[int32(j.Value)] = true
-			}
-		}
-		if f != nil {
-			f(node)
-		}
-	}
-
-	connections = int64(0)
-	for _, v := range visited {
-		if v {
-			connections++
-		}
-	}
-	return
-}
-
-// DFS Depth First Search
-func (g *Graph) DFS() {}
-
-func (g *Graph) DFSParallel(wg *sync.WaitGroup) {
-	defer wg.Done()
 }

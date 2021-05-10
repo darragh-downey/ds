@@ -6,11 +6,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/robatussum/go_ds"
+	"github.com/darragh-downey/ds/go/ds"
 )
 
 func main() {
-	b, root := &go_ds.BST{}, &go_ds.BST{}
+	b, root := &ds.BST{}, &ds.BST{}
 
 	root = b.Insert(root, 50)
 	b.Insert(root, 30)

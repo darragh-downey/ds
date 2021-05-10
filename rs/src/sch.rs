@@ -1,6 +1,7 @@
 mod alg {
     use std::convert::TryFrom;
     use std::convert::TryInto;
+    use num_traits::Num;
 
     pub fn linear_search<T: Ord>(arr: &mut [T], key: T) -> Option<usize> {
         for i in 0..arr.len() {
@@ -76,7 +77,7 @@ mod alg {
     }
 
     // need a [custom] trait for ints/floats only
-    pub fn interpolation_search<T: Ord>(arr: &mut [T], lo: usize, hi: usize, key: T) -> Option<usize> {
+    pub fn interpolation_search<T: Ord + Num>(arr: &mut [T], lo: usize, hi: usize, key: T) -> Option<usize> {
         if lo <= hi && key >= arr[lo] && key <= arr[hi] {
             let pos = lo + (hi - lo)/(arr[hi] - arr[lo])*(key - arr[lo]);
 
