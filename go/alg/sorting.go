@@ -1,6 +1,10 @@
 package alg
 
-import "math"
+import (
+	"math"
+	"math/rand"
+	"time"
+)
 
 // Selection sort
 // Time complexity: O(n^2) as there are two nested loops over the (same) array
@@ -219,5 +223,35 @@ func Heap(arr []int, n int) {
 
 		// call max heapify on the reduced heap
 		heapify(arr, i, 0)
+	}
+}
+
+// Recursive implementation of Quicksort
+func Quicksort(arr []int) []int {
+	if len(arr) < 2 {
+		return arr // arrays of size 0 or 1 are sorted
+	} else {
+		rand.Seed(time.Now().UnixNano())      // seeding with the same value results in the same random sequence each run - this ensures this doesn't happen
+		rand_pivot_ind := rand.Intn(len(arr)) // random index to select the pivot
+		pivot := arr[rand_pivot_ind]          // choose a pivot, a random element would be better in the event of receiving an already sorted array
+		less := make([]int, len(arr)/2)       // potentially all elements end up in the left sub-array
+		greater := make([]int, len(arr)/2)    // potentially all elements end up in the right sub-array
+
+		for i := range arr {
+			if i == rand_pivot_ind {
+				// skip the pivot
+				continue
+			}
+			if arr[i] > pivot {
+				greater = append(greater, arr[i]) // add all elements greater than the pivot to greater
+			} else {
+				less = append(less, arr[i]) // add all elements less than or equal to the pivot to less
+			}
+		}
+		// join results such that:
+		// less + pivot + greater
+		res := append(Quicksort(less), pivot)
+		res = append(res, Quicksort(greater)...)
+		return res
 	}
 }
